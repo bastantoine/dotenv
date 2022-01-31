@@ -1,0 +1,174 @@
+[user]
+	email = bastien.antoine69+github@gmail.com
+	name = bastantoine
+[credential]
+    helper = cache --timeout 2592000
+[alias]
+    lp = log --pretty=tformat:'%C(green)%h%Creset %C(yellow)%an%n  %Creset %s' --graph --abbrev-commit
+    l = log --pretty=oneline --graph --abbrev-commit
+    ls = log --pretty=oneline --graph --abbrev-commit -10
+    la = log --pretty=oneline --graph --abbrev-commit --all
+    lns = log --pretty=oneline --graph --abbrev-commit --name-status
+
+    sns = show --name-status
+
+    # View the current working tree status using the short format
+    s = status -s
+
+    # Show the diff between the latest commit and the current state
+    dom = diff origin/master
+    domns = diff origin/master --name-status
+
+    # Pull in remote changes for the current repository and all its submodules
+    pl = !"git pull"
+    pr = "pull --rebase"
+
+    # Push
+    pu = push
+    pom = push origin/master
+
+    # reset with the given number of latest commits
+    res = "!r() { git reset HEAD~$1; }; r"
+    ress = "!r() { git reset --soft HEAD~$1; }; r"
+    resh = "!r() { git reset --hard HEAD~$1; }; r"
+
+    cp = cherry-pick
+    co = checkout
+
+    # Commit all changes
+    ca = !git add -A && git commit -av
+    # Shortcut for commit
+    cm = commit
+    # Amend the currently staged files to the latest commit
+    am = commit --amend --reuse-message=HEAD
+    # WIP commit
+    wip = commit -am WIP
+
+    # Switch to a branch, creating it if necessary
+    go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+
+    # Show verbose output about tags, branches or remotes
+    tags = tag -l
+    branches = branch -a
+    remotes = remote -v
+
+    # See Which Branches You Recently Worked On
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+
+    # Interactive rebase with the given number of latest commits
+    reb = "!r() { git rebase -i HEAD~$1; }; r"
+
+    # Rebase with origin/master
+    rom = rebase origin/master
+    roma = rebase origin/main
+    rc = rebase --continue
+    ra = rebase --abort
+    rp = rebase --preserve-merges origin/master
+
+    # Remove branches that have already been merged with master (except master)
+    # a.k.a. ‘delete merged’
+    dm = "!git branch --merged | egrep -v '(^\\*|master|dev)' | xargs -n 1 git branch -d"
+
+    # List contributors with number of commits
+    contributors = shortlog --summary --numbered --no-merges
+
+    # Credit an author on the latest commit
+    credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
+
+    # Today’s Work
+    today = log --since=00:00:00 --all --no-merges --oneline --author=bastien@gymglish.com
+    # Remind Yourself What You’ve Been Up To
+    recap = log --all --oneline --no-merges --author=bastien@gymglish.com
+
+    # Praise instead of blamming
+    praise = blame
+
+    fetch = fetch --prune
+    f = fetch
+
+    # SVN
+    spull = svn rebase
+    spush = svn dcommit
+
+    # Submodules
+    sup = submodule update
+
+    # Aliases for Benoît, my dear Maître de stage
+    ci = commit
+    di = diff
+    st = status
+    lo = log --name-status
+[apply]
+
+    # Detect whitespace errors when applying a patch
+    whitespace = fix
+
+[core]
+
+    # Use custom `.gitignore` and `.gitattributes`
+    excludesfile = ~/.gitignore
+    attributesfile = ~/.gitattributes
+
+    # Treat spaces before tabs and all kinds of trailing whitespace as an error
+    # [default] trailing-space: looks for spaces at the end of a line
+    # [default] space-before-tab: looks for spaces before tabs at the beginning of a line
+    whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+
+    # Make `git rebase` safer on OS X
+    # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+    trustctime = false
+
+    # Prevent showing files whose names contain non-ASCII symbols as unversioned.
+    # http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
+    precomposeunicode = false
+
+    # Commit editor
+	editor = vim
+    #pager = diff-so-fancy | less --tabs=1,5 -RFX
+
+[color]
+
+    # Use colors in Git commands that are capable of colored output when
+    # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+    ui = auto
+
+[color "branch"]
+
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+
+    meta = yellow bold
+    frag = magenta bold # line info
+    old = red # deletions
+    new = green # additions
+
+[color "status"]
+
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[diff]
+
+    # Detect copies as well as renames
+    renames = copies
+
+[help]
+
+    # Automatically correct and execute mistyped commands
+    autocorrect = 1
+
+[merge]
+
+    # Include summaries of merged commits in newly created merge commit messages
+    log = true
+
+[push]
+
+    # Use the Git 1.x.x default to avoid errors on machines with old Git
+    # installations. To use `simple` instead, add this to your `~/.extra` file:
+    # `git config --global push.default simple`. See http://git.io/mMah-w.
+	default = current
