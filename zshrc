@@ -16,6 +16,9 @@ ZSH_DISABLE_COMPFIX="true"
 
 plugins=(git virtualenv zsh-syntax-highlighting zsh-autosuggestions poetry)
 
+# Define the varible before sourcing $ZSH/oh-my-zsh.sh, because it will be used
+# in it, and like this we can sed the variable in place during the setup.
+ZSH_THEME=
 source $ZSH/oh-my-zsh.sh
 
 export FZF_DEFAULT_OPTS="--reverse --height=50% --border"
