@@ -128,8 +128,8 @@ for plugin in 'zsh-autosuggestions' 'zsh-syntax-highlighting'; do
     fi
 done
 
-# Install Powerline10K
-echo_section "Installing Powerline10K theme"
+# Install Powerlevel10K
+echo_section "Installing Powerlevel10K theme"
 target=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 if [ ! -d $target ]; then
     git clone --quiet https://github.com/romkatv/powerlevel10k.git $target
@@ -138,7 +138,7 @@ if [ ! -d $target ]; then
     download_file_from_github 'p10k.zsh' ~/.p10k.zsh
     echo_done
 else
-    echo_skip "Theme Powerline10K already installed"
+    echo_skip "Theme Powerlevel10K already installed"
 fi
 
 # Tmux
