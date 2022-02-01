@@ -31,7 +31,7 @@ echo_section () {
 download_file_from_github () {
     echo_color $BLUE "${TAB_SIZE}Downloading $1 to $2"
     url=$GITHUB_SOURCE_URL/$1
-    curl -s -L $1 -o $2
+    curl -s -L -o $2 $url
 }
 
 backup_file () {
