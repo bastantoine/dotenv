@@ -132,7 +132,6 @@ done
 if [ -n "$deps_to_install" ]; then
     if [ $APPLY -eq 1 ]; then
         install_system_dep "$deps_to_install"
-        echo_done
     else
         apply_arg_not_provided
     fi
