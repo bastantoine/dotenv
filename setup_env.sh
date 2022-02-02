@@ -35,7 +35,7 @@ download_file_from_github () {
 }
 
 download_conf_file_from_github () {
-    download_file_from_github conf/$1 $2
+    download_file_from_github confs/$1 $2
 }
 
 backup_file () {
