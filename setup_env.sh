@@ -97,10 +97,14 @@ apply_arg_not_provided () {
 }
 
 APPLY=0
-while getopts "y" option; do
+while getopts "yh" option; do
   case "$option" in
     y)
         APPLY=1
+        ;;
+    h)
+        echo $USAGE
+        exit 0
         ;;
     *)
         echo_color $RED "Unrecognized option" 1>&2
