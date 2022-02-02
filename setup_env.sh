@@ -46,6 +46,14 @@ backup_file () {
     fi
 }
 
+dowload_conf_file () {
+    file=$1
+    target=$2
+    backup_file $target
+    download_conf_file_from_github $file $target
+    echo_done
+}
+
 get_system_package_manager () {
     # Install a given dependency using the system integrated package manager.
     # For now the script will be running on either macOS with brew or Debian
@@ -169,6 +177,14 @@ else
     fi
 fi
 
+# Git config
+echo_section "Getting git conf file"
+if [ $APPLY -eq 1 ]; then
+    download_conf_file_from_github 'gitconfig' ~/.gitconfig
+else
+    apply_arg_not_provided
+fi
+
 # Install oh-my-zsh plugins
 echo_section "Installing Oh My ZSH plugins"
 for plugin in 'zsh-autosuggestions' 'zsh-syntax-highlighting'; do
@@ -207,9 +223,7 @@ fi
 # Tmux
 echo_section "Getting tmux conf file"
 if [ $APPLY -eq 1 ]; then
-    backup_file ~/.tmux.conf
-    download_conf_file_from_github 'tmux.conf' ~/.tmux.conf
-    echo_done
+    dowload_conf_file 'tmux.conf' ~/.tmux.conf
 else
     apply_arg_not_provided
 fi
@@ -217,9 +231,7 @@ fi
 # Vim
 echo_section "Getting vim conf file"
 if [ $APPLY -eq 1 ]; then
-    backup_file ~/.vimrc
-    download_conf_file_from_github 'vimrc' ~/.vimrc
-    echo_done
+    dowload_conf_file 'vimrc' ~/.vimrc
 else
     apply_arg_not_provided
 fi
