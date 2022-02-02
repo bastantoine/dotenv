@@ -146,7 +146,7 @@ target=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 if [ ! -d $target ]; then
     git clone --quiet https://github.com/romkatv/powerlevel10k.git $target
     # We need to make sure the theme is installed before we enable it in the zshrc
-    sed -i 's/ZSH_THEME=/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
+    sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
     backup_file ~/.p10k.zsh
     download_conf_file_from_github 'p10k.zsh' ~/.p10k.zsh
     echo_done
