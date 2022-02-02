@@ -78,10 +78,29 @@ check_if_dep_installed () {
 
 ############
 
-if [ `whoami` != 'vagrant' ]; then
-    echo_color $RED "For safety reasons, this script must be run inside a vagrant powered VM.\nExiting"
-    exit 1
-fi
+USAGE=$(cat <<-EOF
+Usage: $0 [--help] [-y]\n
+\n
+\t-y Apply the changes
+EOF
+)
+apply_arg_not_provided () {
+    echo_skip '-y option not provided'
+}
+
+APPLY=0
+while getopts "y" option; do
+  case "$option" in
+    y)
+        APPLY=1
+        ;;
+    *)
+        echo_color $RED "Unrecognized option" 1>&2
+        echo $USAGE
+        exit 1
+        ;;
+  esac
+done
 
 cat <<-EOF
 ${BOLD}
@@ -94,8 +113,12 @@ ${RESET}
 EOF
 
 echo_section "Updating system dependencies list"
-sudo $(get_system_package_manager) update
-echo_done
+if [ $APPLY -eq 1 ]; then
+    sudo $(get_system_package_manager) update
+    echo_done
+else
+    apply_arg_not_provided
+fi
 
 echo_section "Installing system dependencies"
 deps_to_install=''
@@ -106,35 +129,59 @@ for dep in 'git' 'fzf' 'vim' 'tmux' 'curl' 'zsh'; do
         deps_to_install="$dep $deps_to_install"
     fi
 done
-install_system_dep "$deps_to_install"
-echo_done
+if [ -n "$deps_to_install" ]; then
+    if [ $APPLY -eq 1 ]; then
+        install_system_dep "$deps_to_install"
+        echo_done
+    else
+        apply_arg_not_provided
+    fi
+else
+    echo_skip "No dependencies to install"
+fi
 
 user=$(whoami)
 echo_section "Changing default shell to zsh for user $user"
 # Set zsh as shell for default user
 zsh_location=$(which zsh)
 if [ "$SHELL" != $zsh_location ] 2>/dev/null; then
-    sudo chsh -s $(which zsh) $user
-    echo_done
+    if [ $APPLY -eq 1 ]; then
+        sudo chsh -s $(which zsh) $user
+        echo_done
+    else
+        apply_arg_not_provided
+    fi
 else
     echo_skip 'Shell already set to zsh'
 fi
 
 # Install oh-my-zsh
 echo_section "Installing Oh My ZSH"
-sh -s -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --unattended
-backup_file ~/.zshrc
-download_conf_file_from_github 'zshrc' ~/.zshrc
-echo_done
+if [ -d ~/.oh-my-zsh ]; then
+    echo_skip 'Oh My ZSH already installed under ~/.oh-my-zsh'
+else
+    if [ $APPLY -eq 1 ]; then
+        sh -s -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -- --unattended
+        backup_file ~/.zshrc
+        download_conf_file_from_github 'zshrc' ~/.zshrc
+        echo_done
+    else
+        apply_arg_not_provided
+    fi
+fi
 
 # Install oh-my-zsh plugins
 echo_section "Installing Oh My ZSH plugins"
 for plugin in 'zsh-autosuggestions' 'zsh-syntax-highlighting'; do
     target=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/$plugin
     if [ ! -d $target ]; then
-        echo_color $BLUE "${TAB_SIZE}Downloading plugin $plugin"
-        git clone --quiet https://github.com/zsh-users/$plugin $target
-        echo_done
+        if [ $APPLY -eq 1 ]; then
+            echo_color $BLUE "${TAB_SIZE}Downloading plugin $plugin"
+            git clone --quiet https://github.com/zsh-users/$plugin $target
+            echo_done
+        else
+            apply_arg_not_provided
+        fi
     else
         echo_skip "Plugin $plugin already installed"
     fi
@@ -144,27 +191,39 @@ done
 echo_section "Installing Powerlevel10K theme"
 target=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 if [ ! -d $target ]; then
-    git clone --quiet https://github.com/romkatv/powerlevel10k.git $target
-    # We need to make sure the theme is installed before we enable it in the zshrc
-    sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
-    backup_file ~/.p10k.zsh
-    download_conf_file_from_github 'p10k.zsh' ~/.p10k.zsh
-    echo_done
+    if [ $APPLY -eq 1 ]; then
+        git clone --quiet https://github.com/romkatv/powerlevel10k.git $target
+        # We need to make sure the theme is installed before we enable it in the zshrc
+        sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
+        backup_file ~/.p10k.zsh
+        download_conf_file_from_github 'p10k.zsh' ~/.p10k.zsh
+        echo_done
+    else
+        apply_arg_not_provided
+    fi
 else
     echo_skip "Theme Powerlevel10K already installed"
 fi
 
 # Tmux
 echo_section "Getting tmux conf file"
-backup_file ~/.tmux.conf
-download_conf_file_from_github 'tmux.conf' ~/.tmux.conf
-echo_done
+if [ $APPLY -eq 1 ]; then
+    backup_file ~/.tmux.conf
+    download_conf_file_from_github 'tmux.conf' ~/.tmux.conf
+    echo_done
+else
+    apply_arg_not_provided
+fi
 
 # Vim
 echo_section "Getting vim conf file"
-backup_file ~/.vimrc
-download_conf_file_from_github 'vimrc' ~/.vimrc
-echo_done
+if [ $APPLY -eq 1 ]; then
+    backup_file ~/.vimrc
+    download_conf_file_from_github 'vimrc' ~/.vimrc
+    echo_done
+else
+    apply_arg_not_provided
+fi
 
 cat <<-EOF
 ${BOLD}

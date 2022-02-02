@@ -1,10 +1,10 @@
 Using cURL:
 
 ```bash
-sh -c "$(curl https://raw.githubusercontent.com/bastantoine/dotenv/master/setup_env.sh)"
+sh -s -c "$(curl https://raw.githubusercontent.com/bastantoine/dotenv/master/setup_env.sh)" -- -y
 ```
 
 Using wget:
 ```bash
-sh -c "$(wget -q -O - https://raw.githubusercontent.com/bastantoine/dotenv/master/setup_env.sh)"
+sh -s -c "$(wget -q -O - https://raw.githubusercontent.com/bastantoine/dotenv/master/setup_env.sh)" -- -y
 ```
