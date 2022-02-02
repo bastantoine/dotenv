@@ -25,6 +25,7 @@ echo_skip () {
 }
 
 echo_section () {
+    echo
     echo_color $YELLOW "[ $1 ]"
 }
 
