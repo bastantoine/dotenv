@@ -59,14 +59,16 @@ install_system_dep () {
     # For now the script will be running on either macOS with brew or Debian
     # with apt, so a simply test should be enough to know which package manager
     # to use.
+    echo_color $BLUE "${TAB_SIZE}Installing $1${RESET}"
+    sudo $(get_system_package_manager) install -y $1
+    echo_done
+}
+
+check_if_dep_installed () {
+    # Check if a given dependency is installed. Using which is probably not the
+    # safest, but by far the easiest way for now.
     if ! which $1 >/dev/null 2>&1; then
-        echo_color $BLUE "${TAB_SIZE}Installing $1${RESET}"
-        pkg_manager=`get_system_package_manager`
-        # echo "installing using $pkg_manager"
-        sudo $(get_system_package_manager) install -y $1
-        echo_done
-    else
-        echo_skip "$1 already installed"
+        return 1
     fi
 }
 
@@ -92,9 +94,15 @@ sudo $(get_system_package_manager) update
 echo_done
 
 echo_section "Installing system dependencies"
+deps_to_install=''
 for dep in 'git' 'fzf' 'vim' 'tmux' 'curl' 'zsh'; do
-    install_system_dep $dep
+    if check_if_dep_installed $dep; then
+        echo_skip "$dep already installed"
+    else
+        deps_to_install="$dep $deps_to_install"
+    fi
 done
+install_system_dep "$deps_to_install"
 echo_done
 
 user=$(whoami)
