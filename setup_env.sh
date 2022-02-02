@@ -184,6 +184,7 @@ fi
 # Git config
 echo_section "Getting git conf file"
 if [ $APPLY -eq 1 ]; then
+    backup_file ~/.gitconfig
     download_conf_file_from_github 'gitconfig' ~/.gitconfig
 else
     apply_arg_not_provided
