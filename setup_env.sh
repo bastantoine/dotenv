@@ -86,10 +86,11 @@ check_if_dep_installed () {
 
 ############
 
-USAGE=$(cat <<-EOF
+USAGE=$(cat <<EOF
 Usage: $0 [--help] [-y]\n
 \n
-\t-y Apply the changes
+\t-y Apply the changes. Implies -c.\n
+\t-c Update the conf files to the latest version in the Github repository. Will proceed to the download even if -y option is not provided.
 EOF
 )
 apply_arg_not_provided () {
@@ -97,10 +98,15 @@ apply_arg_not_provided () {
 }
 
 APPLY=0
-while getopts "yh" option; do
+UPDATE_CONFS=0
+while getopts "ych" option; do
   case "$option" in
     y)
         APPLY=1
+        UPDATE_CONFS=1
+        ;;
+    c)
+        UPDATE_CONFS=1
         ;;
     h)
         echo $USAGE
@@ -183,7 +189,7 @@ fi
 
 # Git config
 echo_section "Getting git conf file"
-if [ $APPLY -eq 1 ]; then
+if [ $APPLY -eq 1 ] || [ $UPDATE_CONFS -eq 1 ]; then
     backup_file ~/.gitconfig
     download_conf_file_from_github 'gitconfig' ~/.gitconfig
 else
@@ -215,8 +221,6 @@ if [ ! -d $target ]; then
         git clone --quiet https://github.com/romkatv/powerlevel10k.git $target
         # We need to make sure the theme is installed before we enable it in the zshrc
         sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
-        backup_file ~/.p10k.zsh
-        download_conf_file_from_github 'p10k.zsh' ~/.p10k.zsh
         echo_done
     else
         apply_arg_not_provided
@@ -225,9 +229,17 @@ else
     echo_skip "Theme Powerlevel10K already installed"
 fi
 
+echo_section "Getting Powerlevel10K conf file"
+if [ $APPLY -eq 1 ] || [ $UPDATE_CONFS -eq 1 ]; then
+    backup_file ~/.p10k.zsh
+    download_conf_file_from_github 'p10k.zsh' ~/.p10k.zsh
+else
+    apply_arg_not_provided
+fi
+
 # Tmux
 echo_section "Getting tmux conf file"
-if [ $APPLY -eq 1 ]; then
+if [ $APPLY -eq 1 ] || [ $UPDATE_CONFS -eq 1 ]; then
     dowload_conf_file 'tmux.conf' ~/.tmux.conf
 else
     apply_arg_not_provided
@@ -235,7 +247,7 @@ fi
 
 # Vim
 echo_section "Getting vim conf file"
-if [ $APPLY -eq 1 ]; then
+if [ $APPLY -eq 1 ] || [ $UPDATE_CONFS -eq 1 ]; then
     dowload_conf_file 'vimrc' ~/.vimrc
 else
     apply_arg_not_provided
