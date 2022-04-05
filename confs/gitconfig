@@ -4,9 +4,8 @@
 [credential]
     helper = cache --timeout 2592000
 [alias]
-    lp = log --pretty=tformat:'%C(green)%h%Creset %C(yellow)%an%n  %Creset %s' --graph --abbrev-commit
-    l = log --pretty=oneline --graph --abbrev-commit
-    ls = log --pretty=oneline --graph --abbrev-commit -10
+    l = log --pretty=tformat:'%C(yellow)%h%Creset %C(green)%<(9,trunc)%an %Creset %C(blue)%cd%Creset %s %C(yellow)%d%Creset' --graph --abbrev-commit --date=format:'%Y-%m-%d %H:%M:%S'
+    lsml = log --pretty=oneline --graph --abbrev-commit
     la = log --pretty=oneline --graph --abbrev-commit --all
     lns = log --pretty=oneline --graph --abbrev-commit --name-status
 
