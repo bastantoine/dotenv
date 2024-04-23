@@ -1,0 +1,59 @@
+[
+    // File moving between editors
+    {"key": "cmd+b left",               "command": "workbench.action.moveEditorToLeftGroup"},
+    {"key": "cmd+b up",                 "command": "workbench.action.moveEditorToAboveGroup"},
+    {"key": "cmd+b down",               "command": "workbench.action.moveEditorToBelowGroup"},
+    {"key": "cmd+b right",              "command": "workbench.action.moveEditorToRightGroup"},
+
+    // Switch focus between editors
+    {"key": "cmd+b cmd+up",            "command": "workbench.action.focusAboveGroup"},
+    {"key": "cmd+k cmd+up",            "command": "-workbench.action.focusAboveGroup"},
+    {"key": "cmd+b cmd+down",          "command": "workbench.action.focusBelowGroup"},
+    {"key": "cmd+k cmd+down",          "command": "-workbench.action.focusBelowGroup"},
+    {"key": "cmd+b cmd+left",          "command": "workbench.action.focusLeftGroup"},
+    {"key": "cmd+k cmd+left",          "command": "-workbench.action.focusLeftGroup"},
+    {"key": "cmd+b cmd+right",         "command": "workbench.action.focusRightGroup"},
+    {"key": "cmd+k cmd+right",         "command": "-workbench.action.focusRightGroup"},
+
+    // Switch focus between the Git sidebar panel and the active editor
+    {"key": "cmd+shift+g g",            "command": "-workbench.view.scm"},
+    {"key": "cmd+shift+g cmd+shift+g", "command": "workbench.view.scm"},
+    {"key": "cmd+shift+g cmd+shift+g", "command": "workbench.action.focusActiveEditorGroup",
+                                         "when": "sideBarFocus && activeViewlet == 'workbench.view.scm'"},
+
+
+    // Swith focus between the file explorer sidebar panel and the active editor
+    {"key": "cmd+shift+e cmd+shift+e", "command": "workbench.view.explorer"},
+    {"key": "cmd+shift+e",              "command": "-workbench.view.explorer"},
+    {"key": "cmd+shift+e cmd+shift+e", "command": "workbench.action.focusActiveEditorGroup",
+                                         "when": "sideBarFocus && activeViewlet == 'workbench.view.explorer'"},
+
+    // Switch focus between the terminal and the active editor
+    {"key": "cmd+shift+2 cmd+shift+2", "command": "workbench.action.terminal.focus"},
+    {"key": "cmd+shift+2 cmd+shift+2", "command": "workbench.action.focusActiveEditorGroup",
+                                         "when": "terminalFocus"},
+    {"key": "cmd+shift+j",              "command": "workbench.action.toggleMaximizedPanel",
+                                         "when": "terminalFocus"},
+
+    // Toggle sidebar display
+    {"key": "cmd+b cmd+b",             "command": "workbench.action.toggleSidebarVisibility"},
+    {"key": "cmd+b",                    "command": "-workbench.action.toggleSidebarVisibility"},
+
+    // Toggle maximize panel
+    {"key": "cmd+alt+m",                "command": "clever.maximize.toggleWithoutSidebar",
+                                         "when": "editorTextFocus"},
+    {"key": "cmd+j cmd+j",             "command": "workbench.action.togglePanel"},
+    {"key": "cmd+j",                    "command": "-workbench.action.togglePanel"},
+    {"key": "cmd+j right",              "command": "workbench.action.positionPanelRight"},
+    {"key": "cmd+j down",               "command": "workbench.action.positionPanelBottom"},
+    {"key": "cmd+j left",               "command": "workbench.action.positionPanelLeft"},
+    {"key": "cmd+j cmd+down",          "command": "workbench.action.terminal.focusNext"},
+    {
+        "key": "cmd+j cmd+up",
+        "command": "workbench.action.terminal.focusPrevious"
+    },
+    {
+        "key": "shift+cmd+b shift+cmd+b",
+        "command": "workbench.action.toggleAuxiliaryBar"
+    },
+]
